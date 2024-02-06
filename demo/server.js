@@ -23,13 +23,14 @@ function startServer() {
   const temporaryDisposable = {};
 
   const allowedReferrer = ["127.0.0.1", "0.0.0.0", "10.10.10.9",
-  "acceso.noc.citfundacion.org", "lab.citfundacion.org", "http://lab.citfundacion.org:3333/"]
+  "acceso.noc.citfundacion.org", "lab.citfundacion.org", "lab.citfundacion.org:3333"]
   app.use((req, res, next) => {
     const referer = req.headers.referer;
     if (!referer || !allowedReferrer.some(allowedReferrer => referer.includes(allowedReferrer))) {
       if (req.path.startsWith('/terminals/') && req.path.endsWith('/.websocket')) {
         return next();
       }
+      console.log("Forbidden", req.headers.referer);
       return res.status(403).send('Forbidden');
     } else {
       next();
