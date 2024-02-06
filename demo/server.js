@@ -22,14 +22,17 @@ function startServer() {
   const unsentOutput = {};
   const temporaryDisposable = {};
 
-  const allowedHosts = ["127.0.0.1", "0.0.0.0", "10.10.10.9",
-  "lab.citfundacion.org"]
+  const allowedReferrer = ["127.0.0.1", "0.0.0.0", "10.10.10.9",
+  "acceso.noc.citfundacion.org"]
   app.use((req, res, next) => {
-    if (allowedHosts.includes(req.hostname)) {
-      next();
+    const referer = req.headers.referer;
+    if (!referer || !allowedReferrer.some(allowedReferrer => referer.includes(allowedReferrer))) {
+      if (req.path.startsWith('/terminals/') && req.path.endsWith('/.websocket')) {
+        return next();
+      }
+      return res.status(403).send('Forbidden');
     } else {
-      console.error(`Hostname ${req.hostname} not allowed`)
-      res.status(403).send('Forbidden'); // Respond with a 403 Forbidden status
+      next();
     }
   })
 
