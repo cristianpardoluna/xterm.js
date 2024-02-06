@@ -7,7 +7,6 @@
  */
 
 /// <reference path="../typings/xterm.d.ts"/>
-
 // Use tsc version (yarn watch)
 import { Terminal } from '../out/browser/public/Terminal';
 import { AttachAddon } from '../addons/addon-attach/out/AttachAddon';
@@ -277,7 +276,7 @@ function createTerminal(): void {
       buildNumber: 22621
     } : undefined,
     fontFamily: '"Fira Code", courier-new, courier, monospace, "Powerline Extra Symbols"',
-    theme: xtermjsTheme
+    theme: xtermjsTheme,
   } as ITerminalOptions);
 
   // Load addons
@@ -336,7 +335,6 @@ function createTerminal(): void {
   }
 
   term.focus();
-
   const resizeObserver = new ResizeObserver(entries => {
     if (autoResize) {
       addons.fit.instance.fit();
@@ -387,7 +385,9 @@ function createTerminal(): void {
     socket.onopen = runRealTerminal;
     socket.onclose = runFakeTerminal;
     socket.onerror = runFakeTerminal;
+
   }, 0);
+
 }
 
 function runRealTerminal(): void {
@@ -395,7 +395,32 @@ function runRealTerminal(): void {
   term.loadAddon(addons.attach.instance);
   term._initialized = true;
   initAddons(term);
+
+  // send command NOC
+  setTimeout(() => {
+    const ip = (<HTMLInputElement>document.getElementById("ip-input")).value;
+    const port = (<HTMLInputElement>document.getElementById("port-input")).value;
+    const type = (<HTMLInputElement>document.getElementById("type-input")).value;
+    const username = (<HTMLInputElement>document.getElementById("username-input")).value;
+    const password = (<HTMLInputElement>document.getElementById("password-input")).value;
+    if (type === "SSH") {
+      socket.send(`sshpass -p ${password} ssh -o StrictHostKeychecking=no ${username}@${ip}\r`);
+      setTimeout(() => {
+        socket.send(`clear\r`);
+      }, 1000);
+    } else {
+      socket.send(`telnet ${ip} ${port}\r`);
+      setTimeout(() => {
+        socket.send(`\r`);
+      }, 500);
+    }
+  }, 1000);
 }
+
+// CLEAR TERMINAL
+// setTimeout(() => {
+//   term.clear()
+// }, 2500)
 
 function runFakeTerminal(): void {
   if (term._initialized) {
@@ -404,10 +429,6 @@ function runFakeTerminal(): void {
 
   term._initialized = true;
   initAddons(term);
-
-  term.prompt = () => {
-    term.write('\r\n$ ');
-  };
 
   term.writeln('Welcome to xterm.js');
   term.writeln('This is a local terminal emulation, without a real terminal in the back-end.');

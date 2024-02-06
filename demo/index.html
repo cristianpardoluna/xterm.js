@@ -1,23 +1,29 @@
 <!doctype html>
 <html>
   <head>
-    <title>xterm.js demo</title>
-    <!--
-      WARNING: This demo is a barebones implementation designed for development and evaluation
-      purposes only. It is definitely NOT production ready and does not aim to be so. Exposing the
-      demo to the public as is would introduce security risks for the host.
-    -->
-    <link rel="shortcut icon" type="image/png" href="/logo.png">
     <link rel="stylesheet" href="/xterm.css" />
     <link rel="stylesheet" href="/style.css" />
+    <script>
+      window.addEventListener('message', ({ data }) => {
+        document.getElementById("ip-input").value = data.ip;
+        document.getElementById("port-input").value = data.port;
+        document.getElementById("type-input").value = data.type;
+        document.getElementById("username-input").value = data.username;
+        document.getElementById("password-input").value = data.password;
+      });
+    </script>
   </head>
-  <body>
-    <h1 style="color: #2D2E2C">xterm.js: A terminal for the <em style="color: #5DA5D5">web</em></h1>
+  <body style="height: auto;">
+    <input type="text" id="ip-input" style="display: none;">
+    <input type="text" id="port-input" style="display: none;">
+    <input type="text" id="type-input" style="display: none;">
+    <input type="text" id="username-input" style="display: none;">
+    <input type="text" id="password-input" style="display: none;">
     <div id="container">
       <div class="grid">
         <div id="terminal-container"></div>
       </div>
-      <div class="grid">
+      <div class="grid" style="display: none;">
         <div class="tab">
           <button id="optionsbutton" class="tabLinks" onclick="openSection(event, 'options')">Options</button>
           <button id="addonsbutton" class="tabLinks" onclick="openSection(event, 'addons')">Addons</button>
@@ -123,12 +129,15 @@
         </div>
       </div>
     </div>
-    <div id="texture-atlas-container">
+    <div id="texture-atlas-container" style="display: none;">
       <input type="checkbox" id="texture-atlas-zoom"/>
       <label for="texture-atlas-zoom">Zoom texture atlas</label>
       <div id="texture-atlas"></div>
     </div>
       <script src="dist/client-bundle.js" defer ></script>
+      <script>
+
+      </script>
       <script>
       var tab = localStorage.getItem("tab");
 

@@ -22,6 +22,17 @@ function startServer() {
   const unsentOutput = {};
   const temporaryDisposable = {};
 
+  const allowedHosts = ["127.0.0.1", "0.0.0.0", "10.10.10.9",
+  "lab.citfundacion.org"]
+  app.use((req, res, next) => {
+    if (allowedHosts.includes(req.hostname)) {
+      next();
+    } else {
+      console.error(`Hostname ${req.hostname} not allowed`)
+      res.status(403).send('Forbidden'); // Respond with a 403 Forbidden status
+    }
+  })
+
   app.use('/xterm.css', express.static(__dirname + '/../css/xterm.css'));
   app.get('/logo.png', (req, res) => {
     res.sendFile(__dirname + '/logo.png');
@@ -178,7 +189,8 @@ function startServer() {
     });
   });
 
-  const port = parseInt(process.env.PORT ?? '3000');
+  // const port = parseInt(process.env.PORT ?? '3333');
+  const port = 3333;
   const host = os.platform() === 'win32' ? '127.0.0.1' : '0.0.0.0';
 
   console.log('App listening to http://127.0.0.1:' + port);
