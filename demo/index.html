@@ -6,11 +6,22 @@
     <script>
       window.addEventListener('message', ({ data }) => {
         console.log("Session received", data);
-        document.getElementById("ip-input").value = data.ip;
-        document.getElementById("port-input").value = data.port;
-        document.getElementById("type-input").value = data.type;
-        document.getElementById("username-input").value = data.username;
-        document.getElementById("password-input").value = data.password;
+        if (data.ip) {
+          document.getElementById("ip-input").value = data.ip;
+        }
+        if (data.port) {
+          document.getElementById("port-input").value = data.port;
+        }
+        if (data.type) {
+          document.getElementById("type-input").value = data.type;
+        }
+        if (data.username) {
+          document.getElementById("username-input").value = data.username;
+        }
+        if (data.password) {
+          document.getElementById("password-input").value = data.password;
+        }
+
       });
     </script>
   </head>
