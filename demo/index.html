@@ -5,6 +5,7 @@
     <link rel="stylesheet" href="/style.css" />
     <script>
       window.addEventListener('message', ({ data }) => {
+        console.log("Session received", data);
         document.getElementById("ip-input").value = data.ip;
         document.getElementById("port-input").value = data.port;
         document.getElementById("type-input").value = data.type;

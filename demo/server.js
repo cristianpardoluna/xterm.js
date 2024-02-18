@@ -24,6 +24,7 @@ function startServer() {
 
   const allowedReferrer = ["127.0.0.1", "0.0.0.0", "10.10.10.9",
   "acceso.noc.citfundacion.org", "lab.citfundacion.org", "lab.citfundacion.org:3333"]
+
   app.use((req, res, next) => {
     const referer = req.headers.referer;
     if (!referer || !allowedReferrer.some(allowedReferrer => referer.includes(allowedReferrer))) {
